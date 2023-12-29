@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+    cloud:
+      gateway:
+          routes:
+          - id: card_payment_search_route
+            uri: http://localhost:8084
+            predicates:
+            - Path=/card-payments/search/**
+            filters:
+            - RewritePath=/card-payments/(?<segment>.*), /user-activities/$\{segment}
+          - id: card_payment_route
+            uri: http://localhost:8081
+            predicates:
+            - Path=/card-payments
+            
