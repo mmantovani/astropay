@@ -4,14 +4,48 @@ spring:
     cloud:
       gateway:
           routes:
-          - id: card_payment_search_route
+          # Card Payments
+          - id: card_payments_search_route
             uri: http://localhost:8084
             predicates:
             - Path=/card-payments/search/**
             filters:
             - RewritePath=/card-payments/(?<segment>.*), /user-activities/$\{segment}
-          - id: card_payment_route
+          - id: card_payments_route
             uri: http://localhost:8081
             predicates:
             - Path=/card-payments
+          # Deposits
+          - id: deposits_search_route
+            uri: http://localhost:8084
+            predicates:
+            - Path=/deposits/search/**
+            filters:
+            - RewritePath=/deposits/(?<segment>.*), /user-activities/$\{segment}
+          - id: deposits_route
+            uri: http://localhost:8082
+            predicates:
+            - Path=/deposits
+          # P2P Transfers
+          - id: p2p_transfers_search_route
+            uri: http://localhost:8084
+            predicates:
+            - Path=/p2p-transfers/search/**
+            filters:
+            - RewritePath=/p2p-transfers/(?<segment>.*), /user-activities/$\{segment}
+          - id: p2p_transfers_route
+            uri: http://localhost:8083
+            predicates:
+            - Path=/p2p-transfers
+          # User Activities
+#          - id: user_activities_search_route
+#            uri: http://localhost:8084
+#            predicates:
+#            - Path=/user-activities/search/**
+#            filters:
+#            - RewritePath=/user-activities/(?<segment>.*), /user-activities/$\{segment}
+          - id: user_activities_route
+            uri: http://localhost:8084
+            predicates:
+            - Path=/user-activities
             

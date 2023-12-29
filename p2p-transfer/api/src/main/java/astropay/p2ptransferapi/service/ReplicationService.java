@@ -1,4 +1,4 @@
-package astropay.depositapi.service;
+package astropay.p2ptransferapi.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,10 +17,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import astropay.depositapi.model.Deposit;
+import astropay.p2ptransferapi.model.P2PTransfer;
 
 @Service
-public class ReplicationService extends AbstractRepositoryEventListener<Deposit> {
+public class ReplicationService extends AbstractRepositoryEventListener<P2PTransfer> {
 
     private static final Logger logger = LoggerFactory.getLogger(ReplicationService.class);
 
@@ -39,9 +39,9 @@ public class ReplicationService extends AbstractRepositoryEventListener<Deposit>
 
 
     @Override
-    public void onAfterCreate(Deposit entity) {
+    public void onAfterCreate(P2PTransfer entity) {
 
-        logger.debug("Replicating deposit with id {}", entity.getDepositId());
+        logger.debug("Replicating p2p transfer with id {}", entity.getTransferId());
         Payload payload = createPayload(entity);
         ResponseEntity<Payload> result = restTemplate.postForEntity(URI, payload, Payload.class);
         if (result.getStatusCode() != HttpStatus.CREATED) {
@@ -50,17 +50,17 @@ public class ReplicationService extends AbstractRepositoryEventListener<Deposit>
     }
 
 
-    public Payload createPayload(Deposit entity) {
+    public Payload createPayload(P2PTransfer entity) {
         Payload payload = new Payload(
-                entity.getDepositId().toString(),
-                "DEPOSIT",
-                entity.getUserId(),
-                entity.getDepositAmount(),
-                entity.getDepositCurrency(),
+                entity.getTransferId().toString(),
+                "P2P_TRANSFER",
+                entity.getSenderId(),
+                entity.getTransferAmount(),
+                entity.getTransferCurrency(),
                 entity.getStatus(),
                 entity.getCreatedAt(),
-                entity.getExpiresdAt(),
-                entity.getPaymentMethodCode()
+                entity.getRecipientId(),
+                entity.getComment()
                 );
 
         return payload;
@@ -68,7 +68,7 @@ public class ReplicationService extends AbstractRepositoryEventListener<Deposit>
 
 
     /*
-     * A payload to represent User Activity properties relevant to a Deposit
+     * A payload to represent User Activity properties relevant to a P2P Transfer
      */
     public record Payload(
             String activityId,
@@ -78,7 +78,7 @@ public class ReplicationService extends AbstractRepositoryEventListener<Deposit>
             String currency,
             String status,
             LocalDateTime createdAt,
-            LocalDateTime expiresAt,
-            String paymentMethodCode) {
+            Long recipientId,
+            String comment) {
     };
 }
