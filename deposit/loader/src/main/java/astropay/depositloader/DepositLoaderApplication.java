@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 public class DepositLoaderApplication implements CommandLineRunner {
 
-    private static final int DEFAULT_COUNT = 10;
+    private static final int DEFAULT_COUNT = 1;
     private static final String URI = "http://localhost:8082/deposits";
     private static final int MAX_USERS = 1000;
     private static final String[] currencies = { "USD", "EUR", "GBP", "BRL" };

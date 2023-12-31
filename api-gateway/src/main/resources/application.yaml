@@ -10,6 +10,7 @@ spring:
             predicates:
             - Path=/card-payments/search/**
             filters:
+            - AddRequestParameter=activity_type, CARD_PAYMENT
             - RewritePath=/card-payments/(?<segment>.*), /user-activities/$\{segment}
           - id: card_payments_route
             uri: http://localhost:8081
@@ -21,6 +22,7 @@ spring:
             predicates:
             - Path=/deposits/search/**
             filters:
+            - AddRequestParameter=activity_type, DEPOSIT
             - RewritePath=/deposits/(?<segment>.*), /user-activities/$\{segment}
           - id: deposits_route
             uri: http://localhost:8082
@@ -32,6 +34,7 @@ spring:
             predicates:
             - Path=/p2p-transfers/search/**
             filters:
+            - AddRequestParameter=activity_type, P2P_TRANSFER
             - RewritePath=/p2p-transfers/(?<segment>.*), /user-activities/$\{segment}
           - id: p2p_transfers_route
             uri: http://localhost:8083
@@ -47,5 +50,6 @@ spring:
           - id: user_activities_route
             uri: http://localhost:8084
             predicates:
-            - Path=/user-activities
-            
+            - Path=/user-activities/**
+            filters:
+            - RewritePath=/user-activities/(?<segment>.*), /user-activities/$\{segment}
